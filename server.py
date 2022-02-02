@@ -18,13 +18,19 @@ def actor():
 @app.route("/get-beta-action")
 def beta_action():
     gs = create_state(request.args.get('hist'))
-    player_no = 0 if request.args.get('agent_player') == 'p1' else 'p2'
+    player_no = 0 if request.args.get('agent_player') == 'p1' else 1
     return build_response(get_beta_move(gs, player_no))
 
 @app.route("/get-available-actions")
 def available_actions():
     gs = create_state(request.args.get('hist'))
     return build_response(get_available_actions(gs))
+
+@app.route("/get-bets")
+def bets():
+    gs = create_state(request.args.get('hist'))
+    bs = [(p.bet + gs.game.pot / 2) for p in gs.game.players]
+    return build_response(bs)
 
 @app.route("/get-nature-action")
 def nature_action():
@@ -34,4 +40,6 @@ def nature_action():
 @app.route("/is-terminal")
 def is_terminal():
     gs = create_state(request.args.get('hist'))
-    return build_response(gs.game.is_terminal())
+    term = gs.game.is_terminal()
+    takes = gs.takes
+    return build_response((term, takes))

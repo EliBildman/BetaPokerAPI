@@ -16,6 +16,7 @@ class GameState:
         self.street_i = -1
         self.street = ''
         self.game = game
+        self.takes = None
 
     def itt_street(self):
         streets = ['preflop', 'flop', 'turn', 'river']

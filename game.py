@@ -77,6 +77,7 @@ def create_state(history_str):
 
                 player.fold()
                 gamestate.add_event(Event(p_str, 'fold'))
+                gamestate.takes = (p1.payoff, p2.payoff)
 
             elif action == 'C':
                 if not player.can_check_call():
@@ -93,11 +94,18 @@ def create_state(history_str):
                 gamestate.add_event(Event(p_str, 'raise'))
 
     #check for showdown
-    if p1.can_showdown():
-        p1.showdown()
-    
-    if p2.can_showdown():
-        p2.showdown()
+    if p1.can_showdown() or p2.can_showdown():
+        if p1.can_showdown(): #a little messy
+            p1.showdown()
+            p2.showdown()
+        else:
+            p2.showdown()
+            p1.showdown()
+
+        gamestate.takes = (p1.payoff, p2.payoff)
+
+        
+
 
     return gamestate
 
